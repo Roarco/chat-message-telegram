@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(router);
 
 router.get('/', (req, res) => {
-    res.send('Hello World!');
+    console.log(req.headers);
 });
 
 router.post('/api', (req, res) => {
