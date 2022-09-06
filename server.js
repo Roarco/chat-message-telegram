@@ -1,9 +1,18 @@
 const express = require('express');
+const router = express.Router();
 
 const app = express();
 
-app.use('/', function(req, res) {
+app.use(express.json());
+app.use(router);
+
+router.get('/', (req, res) => {
     res.send('Hello World!');
+});
+
+router.post('/api', (req, res) => {
+    console.log(req.body);
+    res.send(req.body);
 });
 
 app.listen(3000, function() {
