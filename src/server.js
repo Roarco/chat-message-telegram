@@ -25,6 +25,8 @@ router.post('/message', (req, res) => {
     }
 });
 
-app.listen(3000, function() { 
+app.use('/app', express.static('src/public'));
+
+app.listen(3000, function() {
     console.log('Server listening on port 3000');
 });
