@@ -2,9 +2,9 @@
   "name": "curso-de-node.js_-base-de-datos-con-mongodb-y-websockets",
   "version": "1.0.0",
   "description": "Chat como telegram",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon src/server.js"
   },
   "keywords": [],
   "author": "Roberth Arrieta <sebuscaroberth@gmail.com>",
