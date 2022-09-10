@@ -34,5 +34,15 @@ router.patch('/:id', (req, res) => {
         });
 });
 
+router.delete('/:id', (req, res) => {
+    controller.deleteMessage(req.params.id)
+        .then(() => {
+            response.succes(req, res, `Usuario ${req.params.id} eliminado`, 200);
+        })
+        .catch(e => {
+            response.error(req, res, 'Error interno', 500, e);
+        });
+});
+
 
 module.exports = router;
