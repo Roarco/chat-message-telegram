@@ -13,7 +13,7 @@ db.connect();
 app.use(express.json());
 router(app);
 
-app.use('/app', express.static('src/public'));
+app.use('/app', express.static('public'));
 
 app.listen(port, function() {
     console.log(`La aplicación está escuchando en http://localhost:${port}`);

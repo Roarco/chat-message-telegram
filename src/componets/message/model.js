@@ -19,6 +19,9 @@ const mySchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    file: {
+        type: String,
+    }
 });
 
 const model = mongoose.model('Message', mySchema);
