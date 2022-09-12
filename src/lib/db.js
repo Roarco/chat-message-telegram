@@ -1,18 +1,15 @@
 const mongoose = require("mongoose");
+const config = require('../config');
+//const chalk = require('chalk');
 
-const username = process.env.DB_USER;
-const password = process.env.DB_PASS;
-const dbName = process.env.DB_NAME;
-const uri = `mongodb+srv://${username}:${password}@cluster0.r5gkvxf.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 const connect = async () => {
-    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
+    try{
+        await mongoose.connect(config.uri, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('Conectado a la base de datos');
-    })
-    .catch((err) => {
+    }catch(err){
         console.log('Error al conectar a la base de datos', err);
-    });
+    }
 }
 
 module.exports = {
