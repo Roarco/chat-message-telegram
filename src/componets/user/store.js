@@ -1,11 +1,21 @@
 const Model = require("./model");
 
-function addUser(name) {
+/* function addUser(name) {
     const myUser = new Model(name);
     myUser.save();
-}
+} */
 
-async function getUsers(filterID) {
+const addUser = async (user) => {
+    try{
+        const newUser = new Model(user);
+        await newUser.save();
+        return newUser;
+    }catch(error){
+        throw new Error(error);
+    }
+};
+
+/* async function getUsers(filterID) {
     return new Promise((resolve, reject) => {
         let filter = {};
         if (filterID !== null) {
@@ -21,7 +31,22 @@ async function getUsers(filterID) {
                 resolve(populated);
             });
     });
-}
+} */
+
+const getUsers = async (query) => {
+    let filter = {};
+
+    if (query.name) {
+        filter .name = query.name;
+    }
+
+    try{
+        const users = await Model.find(filter);
+        return users;
+    }catch(error){
+        throw new Error(error);
+    }
+};
 
 async function updateUser(id, name) {
     const foundUser = await Model.findOne({

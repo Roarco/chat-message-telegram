@@ -3,15 +3,15 @@ const response = require('../../network/response');
 const router = express.Router();
 const controller = require('./controller');
 
-router.get('/', (req, res) => {
-    const filterUser = req.query.id || null;
-    controller.getUsers(filterUser)
-        .then((userList) => {
-            response.succes(req, res, userList, 200);
-        })
-        .catch(e => {
-            response.error(req, res, 'Unexpected Error', 500, e);
-        });
+router.get('/', async(req, res) => {
+    const query = req.query;
+
+    try{
+        const users = await controller.getUsers(query);
+        response.succes(req, res, 'users were found', 200, users);
+    }catch(e){
+        response.error(req, res, e.message, e.status ,e.internal);
+    }
 });
 
 router.post('/', (req, res) => {
