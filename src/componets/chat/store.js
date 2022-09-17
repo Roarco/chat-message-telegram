@@ -1,30 +1,21 @@
 const Model = require("./model");
 
-function addChat(users) {
+const addChat = (users) => {
     const chat = new Model(users);
-    chat.save();
+    return chat.save();
 }
 
-async function listChats(userId) {
-    return new Promise((resolve, reject) => {
-        let filter = {};
-        if (userId) {
-            filter = {
-                users: userId,
-            };
-        }
-        Model.find(filter)
-            .populate("users")
-            .exec((error, populated) => {
-                if (error) {
-                    reject(error);
-                    return false;
-                }
-                resolve(populated);
-            }
-            );
-    });
-}
+const listChats = (userId) => {
+    let filter = {};
+    if (userId) {
+        filter = {
+            users: userId,
+        };
+    }
+    return Model.find(filter)
+        .populate("users")
+        .exec();
+};
 
 module.exports = {
     add: addChat,
