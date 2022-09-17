@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "name": "Message",
+    "builds": [
+        {
+            "src": "src/server.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "network/routers.js",
+            "dest": "src/server.js"
+        }
+    ]
+}
