@@ -16,16 +16,6 @@ db.connect();
 app.use(cors());
 app.use(express.json());
 
-//conection to the web socket
-socket.connect(server);
-socket.socket.io.on('connection',(socket) => {
-    console.log('Some has connected');
-    socket.emit('message','Test');
-    socket.on('disconnect',() => {
-        console.log('user disconnected');
-    });
-});
-
 // Router set
 router(app);
 
@@ -33,6 +23,16 @@ router(app);
 app.get('*', (req, res) => {
     res.sendFile(__dirname + '/client/build/index.html');
 }); */
+
+//conection to the web socket
+socket.connect(server);
+socket.socket.io.on('connection',(socket) => {
+    console.log('Some has connected');
+    socket.emit('message','TESTING');
+    socket.on('disconnect',() => {
+        console.log('user disconnected');
+    });
+});
 
 server.listen(PORT, function() {
     console.log(`La aplicación está escuchando en http://localhost:${PORT}`);

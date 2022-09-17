@@ -2,51 +2,84 @@ const express = require('express');
 const response = require('../../network/response');
 const router = express.Router();
 const controller = require('./controller');
-const multer = require('multer');
+const multer = require('multer'); // Middleware for file upload
+const path = require('path'); // Path module to manage file paths
+
+const { socket } = require('../../socket');
+
+// Upload multer instance
+const storage = multer.diskStorage({
+    destination: 'public/files/',
+    filename: (req, file, cb) => {
+        const extension = path.extname(file.originalname);
+        cb(null, `${Date.now()}${extension}`);
+    },
+});
 
 const upload = multer({
-    dest: 'public/files/',
+    storage: storage,
 });
 
-router.get('/', (req, res) => {
-    const filterMessages = req.query.chat || null;
-    controller.getMessages(filterMessages)
-        .then((messageList) => {
-            response.succes(req, res, messageList, 200);
-        })
-        .catch(e => {
-            response.error(req, res, 'Unexpected Error', 500, e);
-        });
+//Endpoints
+
+router.get('/', async(req, res) => {
+    //const filterMessages = req.query.chat || null;
+    const query = req.query || null;
+
+    try {
+        const messages = await controller.getMessages(query);
+        response.succes(req, res, 'Messages retrieved successfully', 200, messages);
+    } catch (error) {
+        response.error(req, res, error.message, error.status, error.internal);
+    }
 });
 
-router.post('/', upload.single('file'),(req, res) => {
-    controller.addMessage(req.body.chat,req.body.user, req.body.message, req.file)
-        .then((fullMessage) => {
-            response.succes(req, res, fullMessage, 201);
-        })
-        .catch(e => {
-            response.error(req, res, 'Información invalida', 400, 'Error en el controlador');
-        });
+router.post('/', upload.single('file'),async (req, res) => {
+
+        const { chat, user, message } = req.body;
+
+        try {
+            const fullMessage = await controller.addMessage(
+                chat,
+                user,
+                message,
+                req.file,
+            );
+            const messagePopulated = await controller.getMessages({
+                id: fullMessage._id,
+            });
+            socket.io.emit(`${fullMessage.chat}`, messagePopulated[0]);
+            response.succes(req, res,'Message created successfully', 201, fullMessage);
+        } catch (error) {
+            response.error(req, res, error.message, error.status, error.internal);
+        }
 });
 
-router.patch('/:id', (req, res) => {
-    controller.updateMessage(req.params.id, req.body.message)
-        .then((data) => {
-            response.succes(req, res, data, 200);
-        })
-        .catch(e => {
-            response.error(req, res, 'Error interno', 500, e);
-        });
+router.patch('/:id',async (req, res) => {
+        const { id } = req.params;
+        const { message } = req.body;
+
+        try {
+            const updatedMessage = await controller.updateMessage(id, message);
+            response.succes(req, res, 'Message updated successfully', 200, updatedMessage);
+        } catch (error) {
+            response.error(req, res, error.message, error.status, error.internal);
+        }
 });
 
-router.delete('/:id', (req, res) => {
-    controller.deleteMessage(req.params.id)
-        .then(() => {
-            response.succes(req, res, `Usuario ${req.params.id} eliminado`, 200);
-        })
-        .catch(e => {
-            response.error(req, res, 'Error interno', 500, e);
-        });
+router.delete('/:id', async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            const deletedMessage = await controller.deleteMessage(id);
+            if (deletedMessage) {
+                response.succes(req, res, 'Message deleted successfully', 200, deletedMessage);
+            }else{
+                response.error(req, res, 'Message not found', 404, 'Message not found');
+            }
+        } catch (error) {
+            response.error(req, res, error.message, error.status, error.internal);
+        }
 });
 
 
