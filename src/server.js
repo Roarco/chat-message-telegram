@@ -19,10 +19,10 @@ app.use(express.json());
 // Router set
 router(app);
 
-/* app.use(express.static('client/build'));
+app.use(express.static('client/build'));
 app.get('*', (req, res) => {
     res.sendFile(__dirname + '/client/build/index.html');
-}); */
+});
 
 //conection to the web socket
 socket.connect(server);
