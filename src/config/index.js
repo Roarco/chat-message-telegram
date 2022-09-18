@@ -12,7 +12,7 @@ const config = {
 	uri: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`, */
 	port: process.env.PORT || 3001,
 	uri: process.env.DB_URL,
-	host: `${process.env.HOST || '0.0.0.0' }:${process.env.PORT || 3001}`,
+	host: `${process.env.HOST}:${process.env.PORT || 3001}`,
 };
 
 module.exports = config;
