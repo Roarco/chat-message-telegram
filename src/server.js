@@ -36,5 +36,5 @@ socket.socket.io.on('connection',(socket) => {
 });
 
 server.listen(PORT, function() {
-    console.log(`La aplicación está escuchando en http://localhost:${PORT}`);
+    console.log(`La aplicación está escuchando en http://${config.host}`);
 });
